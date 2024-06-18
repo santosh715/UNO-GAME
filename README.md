@@ -1,10 +1,10 @@
-# Uno Cards Game 
+## Uno Cards Game 
 
 This repository contains the backend server for a multiplayer Uno card game built using Node.js, Express, and MongoDB.
 
-## Installation Instructions
+### Installation Instructions
 
-### Prerequisites
+#### Prerequisites
 
 Before starting, ensure you have the following installed on your machine:
 
@@ -20,8 +20,6 @@ Before starting, ensure you have the following installed on your machine:
    cd <project-folder>
    ```
 
-   Replace `<repository-url>` with the actual URL of your repository.
-
 2. **Install Dependencies**
 
    Navigate to your project directory and install required dependencies using npm:
@@ -32,7 +30,41 @@ Before starting, ensure you have the following installed on your machine:
 
    This command installs the necessary packages for the backend server.
 
-3. **Configure MongoDB Connection**
+3. **Install nodemon (for Development)**
+
+   `nodemon` is a tool that helps develop Node.js based applications by automatically restarting the node application when file changes in the directory are detected.
+
+   Install `nodemon` globally (if not already installed):
+
+   ```bash
+   npm install -g nodemon
+   ```
+
+   Additionally, install `nodemon` as a development dependency in your project:
+
+   ```bash
+   npm install --save-dev nodemon
+   ```
+
+4. **Start the Server in Development Mode**
+
+   To run the server in development mode using `nodemon`, add a script to your `package.json` file:
+
+   ```json
+   "scripts": {
+     "dev": "nodemon index.js"
+   }
+   ```
+
+   Then, start the server with:
+
+   ```bash
+   npm run dev
+   ```
+
+   The server will start on port 5000 by default. You can configure the port using the `PORT` environment variable.
+
+5. **Configure MongoDB Connection**
 
    Open `index.js` and locate the `uri` variable in the MongoDB connection setup:
 
@@ -42,17 +74,7 @@ Before starting, ensure you have the following installed on your machine:
 
    Replace `"mongodb+srv://your_username:your_password@your_cluster_url/your_database_name?retryWrites=true&w=majority"` with your actual MongoDB URI.
 
-4. **Start the Server**
-
-   Start the backend server by running:
-
-   ```bash
-   node index.js
-   ```
-
-   The server will start on port 5000 by default. You can configure the port using the `PORT` environment variable.
-
-5. **Integration with Frontend**
+6. **Integration with Frontend**
 
    - Ensure your frontend application is configured to make HTTP requests to `http://localhost:5000` (or your specified port) where your backend server is running.
    - Place your frontend files (e.g., HTML, CSS, JS) in a directory named `frontend` within your project folder if serving static files from Express.
@@ -74,5 +96,3 @@ Contributions are welcome! Please fork the repository, create a new branch, make
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
-
-This README provides clear installation instructions, outlines the API endpoints, and includes information on contributing to the project. Customize it further based on specific configurations, additional features, or any other details relevant to your Uno card game project.
