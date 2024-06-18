@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const { MongoClient } = require('mongodb');
+const path = require('path'); // Import path module for file path operations
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -11,6 +11,9 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
+
+// Serve static files from the frontend folder
+app.use(express.static(path.join(__dirname, 'frontend')));
 
 // MongoDB connection
 const uri = "mongodb+srv://root:root@cluster0.8ft6z9g.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -23,13 +26,15 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 const GameSchema = new mongoose.Schema({
     code: { type: String, unique: true },
     maxPlayers: Number,
-    players: [{ name: String, hand: [String] }], // Array of objects with name and hand properties
+    players: [{ name: String, hand: [String] }],
     started: Boolean,
     deck: [String],
     discardPile: [String],
-    currentPlayer: String
+    currentPlayer: String,
+    winner: String,
+    scores: Object,
+    overallWinner: String
 });
-
 
 const Game = mongoose.model('Game', GameSchema);
 
@@ -54,9 +59,9 @@ app.post('/api/games/create', async (req, res) => {
         maxPlayers: maxPlayers,
         players: [{ name: hostName, hand: [] }],
         started: false,
-        deck: [], // Initialize empty deck
-        discardPile: [], // Initialize empty discard pile
-        currentPlayer: '' // Initialize currentPlayer
+        deck: [],
+        discardPile: [],
+        currentPlayer: ''
     });
 
     try {
@@ -66,7 +71,6 @@ app.post('/api/games/create', async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 });
-
 
 // Route to join a game room using the unique code and player's name
 app.post('/api/games/join', async (req, res) => {
@@ -78,36 +82,26 @@ app.post('/api/games/join', async (req, res) => {
             return res.status(400).json({ message: 'Player name is required' });
         }
 
-        // Find the game room with the provided code
         const game = await Game.findOne({ code: code });
         if (!game) {
             return res.status(404).json({ message: 'Game room not found' });
         }
 
-        // Check if the game has already started
         if (game.started) {
             return res.status(400).json({ message: 'Game has already started' });
         }
 
-        // Check if the provided player name is unique in the game
         if (game.players.some(player => player.name === playerName)) {
             return res.status(400).json({ message: 'Player name is already taken' });
         }
 
-        // Add the player to the game
         game.players.push({ name: playerName, hand: [] });
-
-        // Save the updated game state
         const updatedGame = await game.save();
-        
-        // Send the updated game state back to the client
         res.json(updatedGame);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
 });
-
-
 
 // Route to start the game
 app.post('/api/games/:id/start', async (req, res) => {
@@ -127,25 +121,19 @@ app.post('/api/games/:id/start', async (req, res) => {
             return res.status(400).json({ message: 'Game already started' });
         }
 
-        // Shuffle deck
         let deck = shuffleDeck(getPredefinedDeck());
-
-        // Deal cards to each player
         const numberOfCardsPerPlayer = 7;
-        const players = game.players;
-        for (let i = 0; i < players.length; i++) {
-            game.players[i].hand = dealCards(deck, numberOfCardsPerPlayer);
-        }
+        
+        game.players.forEach(player => {
+            player.hand = dealCards(deck, numberOfCardsPerPlayer);
+        });
 
-        // Set up discard pile
         const topCardOfDiscardPile = drawCard(deck);
         game.discardPile.push(topCardOfDiscardPile);
 
-        // Set currentPlayer to a random player
         const randomIndex = Math.floor(Math.random() * game.players.length);
         game.currentPlayer = game.players[randomIndex].name;
 
-        // Update game state
         game.deck = deck;
         game.started = true;
 
@@ -155,7 +143,97 @@ app.post('/api/games/:id/start', async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 });
-git commit -m "first commit"
+
+// Route to play a card
+app.post('/api/games/:id/play', async (req, res) => {
+    const gameId = req.params.id;
+    const { playerName, playedCard } = req.body;
+
+    try {
+        let game = await Game.findById(gameId);
+        if (!game) {
+            return res.status(404).json({ message: 'Game not found' });
+        }
+
+        if (!game.started) {
+            return res.status(400).json({ message: 'Game has not started yet' });
+        }
+
+        if (game.currentPlayer !== playerName) {
+            return res.status(400).json({ message: 'It is not your turn' });
+        }
+
+        if (!isValidCard(playedCard, game.discardPile)) {
+            return res.status(400).json({ message: 'Invalid card' });
+        }
+
+        const playerIndex = game.players.findIndex(player => player.name === playerName);
+        const cardIndex = game.players[playerIndex].hand.findIndex(card => card === playedCard);
+        if (cardIndex === -1) {
+            return res.status(400).json({ message: 'Card not found in player\'s hand' });
+        }
+        game.players[playerIndex].hand.splice(cardIndex, 1);
+
+        game.discardPile.push(playedCard);
+        game.currentPlayer = game.players[(playerIndex + 1) % game.players.length].name;
+
+        if (game.players[playerIndex].hand.length === 0) {
+            game.winner = playerName;
+            game.started = false;
+
+            const scores = calculateScores(game);
+            game.scores = scores;
+
+            if (checkOverallWinner(scores)) {
+                game.overallWinner = getOverallWinner(scores);
+            }
+        }
+
+        const updatedGame = await game.save();
+        res.json(updatedGame);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
+
+// Route to draw a card
+app.post('/api/games/:id/draw', async (req, res) => {
+    const gameId = req.params.id;
+    const { playerName } = req.body;
+
+    try {
+        let game = await Game.findById(gameId);
+        if (!game) {
+            return res.status(404).json({ message: 'Game not found' });
+        }
+
+        if (!game.started) {
+            return res.status(400).json({ message: 'Game has not started yet' });
+        }
+
+        if (game.currentPlayer !== playerName) {
+            return res.status(400).json({ message: 'It is not your turn' });
+        }
+
+        if (game.deck.length === 0) {
+            return res.status(400).json({ message: 'Draw pile is empty' });
+        }
+
+        const drawnCard = drawCard(game.deck);
+        if (isValidCard(drawnCard, game.discardPile)) {
+            const playerIndex = game.players.findIndex(player => player.name === playerName);
+            game.players[playerIndex].hand.push(drawnCard);
+        } else {
+            game.discardPile.push(drawnCard);
+            game.currentPlayer = game.players[(game.players.findIndex(player => player.name === playerName) + 1) % game.players.length].name;
+        }
+
+        const updatedGame = await game.save();
+        res.json(updatedGame);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
 
 // Function to shuffle the deck
 function shuffleDeck(deck) {
@@ -188,7 +266,6 @@ function getPredefinedDeck() {
 
     let deck = [];
 
-    // Add number cards for each color
     for (let color of colors) {
         for (let number of numbers) {
             deck.push(`${color} ${number}`);
@@ -198,7 +275,6 @@ function getPredefinedDeck() {
         }
     }
 
-    // Add special cards (Reverse, Skip, Draw Two) for each color
     for (let color of colors) {
         for (let card of specialCards) {
             deck.push(`${color} ${card}`);
@@ -206,7 +282,6 @@ function getPredefinedDeck() {
         }
     }
 
-    // Add Wild and Wild Draw Four cards
     for (let i = 0; i < 4; i++) {
         deck.push('Wild');
         deck.push('Wild Draw Four');
@@ -214,122 +289,6 @@ function getPredefinedDeck() {
 
     return deck;
 }
-
-// Route to play a card
-app.post('/api/games/:id/play', async (req, res) => {
-    const gameId = req.params.id;
-    const { playerName, playedCard } = req.body;
-
-    try {
-        let game = await Game.findById(gameId);
-        if (!game) {
-            return res.status(404).json({ message: 'Game not found' });
-        }
-
-        if (!game.started) {
-            return res.status(400).json({ message: 'Game has not started yet' });
-        }
-
-        if (game.currentPlayer !== playerName) {
-            return res.status(400).json({ message: 'It is not your turn' });
-        }
-
-        // Check if the played card is valid
-        if (!isValidCard(playedCard, game.discardPile)) {
-            return res.status(400).json({ message: 'Invalid card' });
-        }
-
-        // Remove the played card from the player's hand
-        const playerIndex = game.players.findIndex(player => player.name === playerName);
-        const cardIndex = game.players[playerIndex].hand.findIndex(card => card === playedCard);
-        if (cardIndex === -1) {
-            return res.status(400).json({ message: 'Card not found in player\'s hand' });
-        }
-        game.players[playerIndex].hand.splice(cardIndex, 1);
-
-        // Update discard pile
-        game.discardPile.push(playedCard);
-
-        // Update current player (rotate players)
-        game.currentPlayer = game.players[(playerIndex + 1) % game.players.length].name;
-
-        // Check if player has won
-        if (game.players[playerIndex].hand.length === 0) {
-            game.winner = playerName;
-            game.started = false;
-        }
-
-        if (game.players[playerIndex].hand.length === 0) {
-            game.winner = playerName;
-            game.started = false;
-    
-            // Calculate scores
-            const scores = calculateScores(game);
-            game.scores = scores;
-    
-            // Check for overall winner
-            if (checkOverallWinner(scores)) {
-                game.overallWinner = getOverallWinner(scores);
-            }
-        }
-
-
-        const updatedGame = await game.save();
-        res.json(updatedGame);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-});
-
-// Route to draw a card
-app.post('/api/games/:id/draw', async (req, res) => {
-    const gameId = req.params.id;
-    const { playerName } = req.body;
-
-    try {
-        let game = await Game.findById(gameId);
-        if (!game) {
-            return res.status(404).json({ message: 'Game not found' });
-        }
-
-        if (!game.started) {
-            return res.status(400).json({ message: 'Game has not started yet' });
-        }
-
-        if (game.currentPlayer !== playerName) {
-            return res.status(400).json({ message: 'It is not your turn' });
-        }
-
-        // Draw a card from the deck
-        if (game.deck.length === 0) {
-            return res.status(400).json({ message: 'Draw pile is empty' });
-        }
-        const drawnCard = drawCard(game.deck);
-
-        // Check if the drawn card is playable
-        if (isValidCard(drawnCard, game.discardPile)) {
-            // Add drawn card to player's hand
-            const playerIndex = game.players.findIndex(player => player.name === playerName);
-            game.players[playerIndex].hand.push(drawnCard);
-
-            // Update current player (do not rotate players)
-            const updatedGame = await game.save();
-            res.json(updatedGame);
-        } else {
-            // Add drawn card to discard pile
-            game.discardPile.push(drawnCard);
-
-            // Update current player (rotate players)
-            const playerIndex = game.players.findIndex(player => player.name === playerName);
-            game.currentPlayer = game.players[(playerIndex + 1) % game.players.length].name;
-
-            const updatedGame = await game.save();
-            res.json(updatedGame);
-        }
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-});
 
 // Function to check if a card is valid to play
 function isValidCard(card, discardPile) {
@@ -351,13 +310,13 @@ function calculateScores(game) {
                 score += parseInt(value);
             } else {
                 switch (value) {
-                    case 'Draw': // Draw 2, Reverse, Skip
+                    case 'Draw':
                     case 'Reverse':
                     case 'Skip':
                         score += 20;
                         break;
-                    case 'Wild': // Wild, Wild Draw Four
-                    case 'Wild Draw':
+                    case 'Wild':
+                    case 'Wild Draw Four':
                         score += 50;
                         break;
                 }
@@ -368,7 +327,6 @@ function calculateScores(game) {
     return scores;
 }
 
-// Function to check for overall winner
 function checkOverallWinner(scores) {
     for (let player in scores) {
         if (scores[player] >= 500) {
@@ -378,7 +336,6 @@ function checkOverallWinner(scores) {
     return false;
 }
 
-// Function to get overall winner
 function getOverallWinner(scores) {
     let winner = null;
     let minScore = Infinity;
@@ -390,7 +347,10 @@ function getOverallWinner(scores) {
     }
     return winner;
 }
-// Other routes for gameplay (play card, draw card, etc.)
 
+// For production build, serve index.html from frontend folder for all other routes
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend/index.html'));
+});
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
