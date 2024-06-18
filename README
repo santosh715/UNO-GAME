@@ -1,10 +1,10 @@
-## Uno Cards Game 
+# Uno Cards Game 
 
 This repository contains the backend server for a multiplayer Uno card game built using Node.js, Express, and MongoDB.
 
-### Installation Instructions
+## Installation Instructions
 
-#### Prerequisites
+### Prerequisites
 
 Before starting, ensure you have the following installed on your machine:
 
