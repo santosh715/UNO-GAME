@@ -1,0 +1,171 @@
+.host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+
+}
+
+.join-code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+}
+
+.join-players {
+    height: 50vh;
+}
+
+.card--1 {
+    height: 100px;
+    width: 100px;
+}
+
+.one {
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+}
+
+.img-1 {
+    width: 100%
+}
+
+
+
+
+
+
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    align-items: center;
+    font-family: arial;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.host-btn {
+    border-radius: 20px;
+    width: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 1));
+}
+
+.room-code-btn{
+    border-radius: 20px;
+    width: 80%;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 1));
+    
+}
+
+
+.card-host {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+    font-family: arial;
+}
+
+.host-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+.room-code{
+    padding-bottom: 50px;
+}
+
+
+
+button {
+    border: none;
+    outline: 0;
+    display: inline-block;
+    padding: 8px;
+    color: white;
+    background-color: #000;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.code-btn {
+    height: 50px;
+    width: 200px;
+}
+
+
+
+button:hover,
+a:hover {
+    opacity: 0.7;
+}
+
+.img-1 {
+    height: 100px;
+    width: 100px;
+    border-radius: 200px;
+
+}
+
+.main-box {
+    margin: 20px;
+    box-shadow: -5px -5px 5px 5px red;
+
+}
+
+.box-1 {
+    margin: 20px;
+    box-shadow: -5px -5px 5px 5px #f5f7f8;
+    border-radius: 20px;
+}
+
+.box-2 {
+    /* margin: 20px; */
+    width: 80%;
+    box-shadow: -5px -5px 5px 5px #f5f7f8;
+    border-radius: 20px;
+    
+}
+
+.box-3 {
+    margin: 20px;
+    box-shadow: -5px -5px 5px 5px black;
+    border-radius: 20px;
+}
+
+/* src/assets/css/HostRoom.css */
+.player-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.player-card {
+    flex: 1 1 calc(20% - 10px);
+    /* This ensures up to 5 cards in a row */
+    max-width: calc(20% - 10px);
+    box-sizing: border-box;
+}
+
+.player-card .card {
+    width: 100%;
+}

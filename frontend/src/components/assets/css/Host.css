@@ -1,0 +1,139 @@
+.host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+
+}
+
+.join-code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50vh;
+}
+
+.join-players {
+    height: 50vh;
+}
+
+.card--1 {
+    height: 100px;
+    width: 100px;
+}
+
+.one {
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+}
+
+.img-1{
+    width:100%
+}
+
+
+
+
+
+
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+    font-family: arial;
+    border-radius: 20px;
+}
+.card:nth-child(1n) {
+    /* background-image: url("../img/user-img.jpg"); */
+    
+  }
+
+.card-host {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+    font-family: arial;
+}
+
+.host-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.join-code-1 {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* padding-top: auto; */
+
+}
+
+
+
+button {
+    border: none;
+    outline: 0;
+    display: inline-block;
+    padding: 8px;
+    color: white;
+    background-color: #000;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.code-btn {
+    height: 50px;
+    width: 200px;
+}
+
+
+
+button:hover,
+a:hover {
+    opacity: 0.7;
+}
+
+.img-1 {
+    height: 100px;
+    width: 50px;
+    border-radius: 200px;
+    /* background-image: url(../img/user-img.jpg); */
+}
+.img-1:nth-child(1n) {
+    background-image: url("../img/user-img.jpg");
+    
+  }
+
+.main-box {
+    margin: 20px;
+    box-shadow: -5px -5px 5px 5px red;
+
+}
+
+.box-1 {
+    margin: 20px;
+    box-shadow: -5px -5px 5px 5px black;
+    border-radius: 20px;
+}
+
+.box-2 {
+    margin: 20px;
+    box-shadow: -5px -5px 5px 5px black;
+    border-radius: 20px;
+}
+
+.box-3 {
+    margin: 20px;
+    box-shadow: -5px -5px 5px 5px black;
+    border-radius: 20px;
+}

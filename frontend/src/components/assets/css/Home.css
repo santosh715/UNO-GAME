@@ -1,0 +1,172 @@
+.main-div-1 {
+  background-image: url('../images/Landing-Page.gif');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-div-2 {
+  width: 80%;
+  height: 80%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.flip-card {
+  background-color: transparent;
+  width: 300px;
+  height: 400px;
+  perspective: 1000px;
+  margin: 20px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-card-front {
+  color: black;
+}
+
+.flip-card-back {
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.card-wrap {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.my-div {
+  width: 300px;
+}
+
+.label {
+  color: blue;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: xx-large;
+}
+
+.Players {
+  color: red;
+  background-color: red;
+  border-radius: 20px;
+}
+
+.join-text-box {
+  width: 30px;
+  height: 30px;
+}
+
+.enter-code {
+  color: blue;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: xx-large;
+}
+
+.code-input[type="text"] {
+  width: 20px;
+  text-align: center;
+  margin-right: 5px;
+}
+
+.player-name {
+  width: 200px;
+}
+
+/* Ensure no hover effects interfere */
+.flip-card:hover .flip-card-inner {
+  /* This line should remain commented */
+}
+
+@media (max-width: 768px) {
+  .main-div-2 {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .flip-card {
+    width: 300px;
+    height: 300px;
+  }
+
+  .card-wrap {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .my-div {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .code-input[type="text"] {
+    width: 30px;
+    margin: 5px;
+  }
+}
+
+.create-join-card {
+  height: 100%;
+  width: 100%;
+  border-radius: 3px;
+}
+
+img {
+  height: 100%;
+  width: 100%;
+  border-radius: 3px;
+}
+
+.avatar-img {
+  height: 60px;
+  width: 60px;
+}
+.selected-avatar{
+  height: 60px;
+  width: 60px;
+
+}
+/* .join-player-avatar-div{
+  height: 15vh;
+}
+
+.host-avatar-div{
+  height: 15vh;
+} */

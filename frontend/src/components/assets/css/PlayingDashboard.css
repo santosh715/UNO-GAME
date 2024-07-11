@@ -1,0 +1,243 @@
+.first-player {
+    height: 33.33vh;
+
+
+    display: flex;
+    justify-content: center;
+
+}
+
+.first-player-center {
+    width: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+
+}
+
+.first-player-img {
+    height: 20vh;
+    width: 10vh;
+}
+
+.first-img-1 {
+    position: relative;
+
+
+
+}
+
+.first-img-2 {
+    position: relative;
+    left: -50px;
+
+}
+
+.first-img-3 {
+    position: relative;
+    position: relative;
+    left: -100px;
+
+}
+
+.first-img-4 {
+    position: relative;
+    position: relative;
+    left: -150px;
+
+}
+
+.first-img-5 {
+    position: relative;
+    position: relative;
+    left: -200px;
+
+}
+
+.first-img-6 {
+    position: relative;
+    position: relative;
+    left: -250px;
+
+}
+
+.first-img-7 {
+    position: relative;
+    position: relative;
+    left: -300px;
+
+}
+
+
+.playing-area {
+    height: 33.33vh;
+
+}
+
+.second-player {
+    height: 33.33vh;
+
+}
+
+
+
+
+
+
+
+
+
+
+.second-player {
+    height: 33.33vh;
+
+
+    display: flex;
+    justify-content: center;
+
+}
+
+.second-player-center {
+    width: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+
+}
+
+.second-player-img {
+    height: 20vh;
+    width: 10vh;
+}
+
+.second-img-1 {
+    position: relative;
+
+
+
+}
+
+.second-img-2 {
+    position: relative;
+    left: -50px;
+
+}
+
+.second-img-3 {
+    position: relative;
+    position: relative;
+    left: -100px;
+
+}
+
+.second-img-4 {
+    position: relative;
+    position: relative;
+    left: -150px;
+
+}
+
+.second-img-5 {
+    position: relative;
+    position: relative;
+    left: -200px;
+
+}
+
+.second-img-6 {
+    position: relative;
+    position: relative;
+    left: -250px;
+
+}
+
+.second-img-7 {
+    position: relative;
+    position: relative;
+    left: -300px;
+
+}
+
+
+.playing-area {
+    height: 33.33vh;
+
+}
+
+.second-player {
+    height: 33.33vh;
+
+}
+.second-player-img-btn{
+    background: none;
+}
+.first-player-img-btn{
+    background: none;
+}
+
+.first-player, .second-player {
+    height: 33.33vh;
+    display: flex;
+    justify-content: center;
+}
+
+.first-player-center, .second-player-center, .playing-area-center {
+    width: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.first-player-center{
+    
+}
+.first-player-img, .second-player-img, .playing-area-img {
+    height: 20vh;
+    width: 10vh;
+    margin-left: -50px;
+}
+
+.playing-area {
+    height: 33.33vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.first-player-img-btn, .second-player-img-btn {
+    background: none;
+}
+
+
+
+
+
+
+
+
+@keyframes moveToPlayingAreaFromFirst {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translate(20vh, 33.33vh);
+    }
+}
+
+@keyframes moveToPlayingAreaFromSecond {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translate(20vh, -33.33vh);
+    }
+}
+
+.moving-from-first {
+    animation: moveToPlayingAreaFromFirst 0.5s ease-in-out forwards;
+}
+
+.moving-from-second {
+    animation: moveToPlayingAreaFromSecond 0.5s ease-in-out forwards;
+}
