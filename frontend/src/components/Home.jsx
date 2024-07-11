@@ -18,25 +18,78 @@ import boy5 from './assets/images/avatars/avatar-boy-5.png';
 export const Home = () => {
     const { setHostName, setNumberOfPlayers, setHostAvatar, players, setPlayers } = useContext(GameContext);
     const [localHostName, setLocalHostName] = useState('');
-    const [localNumberOfPlayers, setLocalNumberOfPlayers] = useState(0);
+    const [localNumberOfPlayers, setLocalNumberOfPlayers] = useState();
     const [avatarType, setAvatarType] = useState('');
     const [showAvatarPopup, setShowAvatarPopup] = useState(false);
     const [selectedAvatar, setSelectedAvatar] = useState('');
     const [playerName, setPlayerName] = useState('');
     const [selectedPlayerAvatar, setSelectedPlayerAvatar] = useState('');
+    const[code,setCode]=useState('')
     const navigate = useNavigate();
 
-    const handleStart = () => {
+    const handleStart = async(e) => {
+        e.preventDefault();
         setHostName(localHostName);
         setNumberOfPlayers(localNumberOfPlayers);
         setHostAvatar(selectedAvatar);
-        navigate('/Dashboard');
+       
+
+        const gameData={
+            hostName:localHostName,
+            maxPlayers:localNumberOfPlayers,
+
+        };
+
+        console.log("Data",gameData)
+        
+        try{
+            const response=await fetch("https://host-api-live-production.up.railway.app/api/games/create",
+            {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+                },
+                body: JSON.stringify(gameData),
+            }).then(()=>{
+                navigate('/Dashboard');
+            })
+        
+        }catch(error){
+            console.error("Error:",error);
+        }
+        
+        
+
+
     };
 
-    const handleJoin = () => {
+    const handleJoin = async(e) => {
+        e.preventDefault();
         const newPlayer = { name: playerName, avatar: selectedPlayerAvatar };
         setPlayers([...players, newPlayer]);
-        navigate('/Dashboard');
+
+        const joinData={
+            playerName:playerName,
+            code:code
+        };
+
+        console.log("CODE",joinData);
+
+        try{
+            const response=await fetch("https://host-api-live-production.up.railway.app/api/games/join",
+            {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+                },
+                body: JSON.stringify(joinData),
+            }).then(()=>{
+                navigate('/Dashboard');
+            })
+        
+        }catch(error){
+            console.error("Error:",error);
+        }
     };
 
     const validateAndMove = (current, nextFieldId, prevFieldId) => {
@@ -200,16 +253,9 @@ export const Home = () => {
                                     {selectedPlayerAvatar && <img src={selectedPlayerAvatar} alt="Selected Player Avatar" className="selected-avatar" />}
                                 </div>
                                 <div className="card-wrap">
-                                    <label htmlFor="box1" className="enter-code" id="enter-code-join">Enter Code:</label>
-                                    <br />
-                                    <input type="text" className="code-input" id="box1" maxLength="1" onInput={(e) => validateAndMove(e.target, 'box2', '')} />
-                                    <input type="text" className="code-input" id="box2" maxLength="1" onInput={(e) => validateAndMove(e.target, 'box3', 'box1')} />
-                                    <input type="text" className="code-input" id="box3" maxLength="1" onInput={(e) => validateAndMove(e.target, 'box4', 'box2')} />
-                                    <input type="text" className="code-input" id="box4" maxLength="1" onInput={(e) => validateAndMove(e.target, 'box5', 'box3')} />
-                                    <input type="text" className="code-input" id="box5" maxLength="1" onInput={(e) => validateAndMove(e.target, 'box6', 'box4')} />
-                                    <input type="text" className="code-input" id="box6" maxLength="1" onInput={(e) => validateAndMove(e.target, 'box7', 'box5')} />
-                                    <input type="text" className="code-input" id="box7" maxLength="1" onInput={(e) => validateAndMove(e.target, 'box8', 'box6')} />
-                                    <input type="text" className="code-input" id="box8" maxLength="1" onInput={(e) => validateAndMove(e.target, '', 'box7')} />
+                                    <label htmlFor="gameCode" className="label">Enter Game Code:</label>
+                                    <input type="text" maxLength={8} className="enter-code" id="gamecode" value={code} onChange={(e) => setCode(e.target.value)} />
+                                    
                                 </div>
                                 <div className="card-wrap">
                                     <button className="first-btn" id="join-btn-submit" onClick={handleJoin}>Join</button>

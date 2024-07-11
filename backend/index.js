@@ -50,7 +50,7 @@ function generateUniqueCode() {
 }
 
 // Route to create a new game room with a unique code
-app.post('/api/games/create', async (req, res) => {c
+app.post('/api/games/create', async (req, res) => {
     const { maxPlayers, hostName } = req.body;
     const code = generateUniqueCode();
 
