@@ -91,7 +91,6 @@ Before starting, ensure you have the following installed on your machine:
 
 Contributions are welcome! Please fork the repository, create a new branch, make your changes, and submit a pull request.
 
-jose
 
 ### License
 
