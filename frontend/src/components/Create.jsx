@@ -1,0 +1,148 @@
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { GameContext } from '../context/GameContext';
+import './assets/css/Home.css';
+import create from './assets/images/Create.png';
+import girl1 from './assets/images/avatars/avatar-girl-1.png';
+import girl2 from './assets/images/avatars/avatar-girl-2.png';
+import girl3 from './assets/images/avatars/avatar-girl-3.png';
+import girl4 from './assets/images/avatars/avatar-girl-4.png';
+import girl5 from './assets/images/avatars/avatar-girl-5.png';
+import boy1 from './assets/images/avatars/avatar-boy-1.png';
+import boy2 from './assets/images/avatars/avatar-boy-2.png';
+import boy3 from './assets/images/avatars/avatar-boy-3.png';
+import boy4 from './assets/images/avatars/avatar-boy-4.png';
+import boy5 from './assets/images/avatars/avatar-boy-5.png';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
+
+const Create = ({ handleFlip, flippedCard }) => {
+    const { setHostName, setNumberOfPlayers, setHostAvatar, setPlayers } = useContext(GameContext);
+    const [localHostName, setLocalHostName] = useState('');
+    const [localNumberOfPlayers, setLocalNumberOfPlayers] = useState(1); // Default to 2 players
+    const [avatarType, setAvatarType] = useState('');
+    const [showAvatarPopup, setShowAvatarPopup] = useState(false);
+    const [selectedAvatar, setSelectedAvatar] = useState('');
+    const navigate = useNavigate();
+
+    const handleStart = () => {
+        setHostName(localHostName);
+        setNumberOfPlayers(localNumberOfPlayers);
+        setHostAvatar(selectedAvatar);
+        setPlayers([...Array(localNumberOfPlayers).keys()].map(i => ({ name: `Player ${i + 1}`, avatar: '' })));
+        navigate('/Dashboard');
+    };
+
+    const handleAvatarSelection = (avatar) => {
+        setSelectedAvatar(avatar);
+        setShowAvatarPopup(false);
+    };
+    
+
+    return (
+        <div className={`flip-card ${flippedCard === 1 ? 'flipped' : ''}`} onClick={() => handleFlip(1)} >
+            <div className="flip-card-inner">
+                <div className="flip-card-front">
+                    <img className="create-join-card" src={create} alt="Create" />
+                </div>
+                <div className="flip-card-back">
+                    <div className="card-wrap">
+                        <div className="my-div">
+                            <label htmlFor="hostName" className="enter-code" id="host-name-input">Host Name:</label>
+                            <input type="text" className="player-name" id="hostName" value={localHostName} onChange={(e) => setLocalHostName(e.target.value)} />
+                        </div>
+                    </div>
+                    <Popup
+                        trigger={
+                            <button className="first-btn">
+                                Select Avatar
+                                <div className="card-wrap">
+                                    <div className="host-avatar-div">
+                                        <div>
+                                            <input
+                                                type="radio"
+                                                id="girl"
+                                                name="avatarType"
+                                                value="girl"
+                                                onChange={(e) => {
+                                                    setAvatarType(e.target.value);
+                                                    setShowAvatarPopup(true);
+                                                }}
+                                            />
+                                            <label htmlFor="girl">Girl</label>
+                                            <input
+                                                type="radio"
+                                                id="boy"
+                                                name="avatarType"
+                                                value="boy"
+                                                onChange={(e) => {
+                                                    setAvatarType(e.target.value);
+                                                    setShowAvatarPopup(true);
+                                                }}
+                                            />
+                                            <label htmlFor="boy">Boy</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        }
+                        position="right center"
+                        contentStyle={{ width: '45vh', height: '20vh' }}
+                    >
+                        {close => (
+                            <div>
+                                <div className="card-wrap">
+                                    {showAvatarPopup && (
+                                        <div className="avatar-popup">
+                                            <button className="close-btn" onClick={close}>×</button>
+                                            <h4>Select Avatar</h4>
+                                            <div className="avatar-options">
+                                                {avatarType === 'girl' ? (
+                                                    <div>
+                                                        <img className='avatar-img' src={girl1} alt="Girl Avatar 1" onClick={() => handleAvatarSelection(girl1)} />
+                                                        <img className='avatar-img' src={girl2} alt="Girl Avatar 2" onClick={() => handleAvatarSelection(girl2)} />
+                                                        <img className='avatar-img' src={girl3} alt="Girl Avatar 3" onClick={() => handleAvatarSelection(girl3)} />
+                                                        <img className='avatar-img' src={girl4} alt="Girl Avatar 4" onClick={() => handleAvatarSelection(girl4)} />
+                                                        <img className='avatar-img' src={girl5} alt="Girl Avatar 5" onClick={() => handleAvatarSelection(girl5)} />
+                                                    </div>
+                                                ) : (
+                                                    <div>
+                                                        <img className='avatar-img' src={boy1} alt="Boy Avatar 1" onClick={() => handleAvatarSelection(boy1)} />
+                                                        <img className='avatar-img' src={boy2} alt="Boy Avatar 2" onClick={() => handleAvatarSelection(boy2)} />
+                                                        <img className='avatar-img' src={boy3} alt="Boy Avatar 3" onClick={() => handleAvatarSelection(boy3)} />
+                                                        <img className='avatar-img' src={boy4} alt="Boy Avatar 4" onClick={() => handleAvatarSelection(boy4)} />
+                                                        <img className='avatar-img' src={boy5} alt="Boy Avatar 5" onClick={() => handleAvatarSelection(boy5)} />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                    {selectedAvatar && <img src={selectedAvatar} alt="Selected Avatar" className="selected-avatar" />}
+                                </div>
+                            </div>
+                        )}
+                    </Popup>
+                    <div className="card-wrap">
+                        <label className="label">Select Players</label>
+                        <select name="Players" id="Players" onChange={(e) => setLocalNumberOfPlayers(parseInt(e.target.value))}>
+                            <option value="2">2 Player</option>
+                            <option value="3">3 Player</option>
+                            <option value="4">4 Player</option>
+                            <option value="5">5 Player</option>
+                            <option value="6">6 Player</option>
+                            <option value="7">7 Player</option>
+                            <option value="8">8 Player</option>
+                            <option value="9">9 Player</option>
+                            <option value="10">10 Player</option>
+                        </select>
+                    </div>
+                    <div className="card-wrap">
+                        <button className="first-btn" id="start-btn" onClick={handleStart}>START</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Create;
