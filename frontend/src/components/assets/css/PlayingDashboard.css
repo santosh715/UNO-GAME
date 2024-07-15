@@ -241,3 +241,18 @@
 .moving-from-second {
     animation: moveToPlayingAreaFromSecond 0.5s ease-in-out forwards;
 }
+
+
+
+/* src/components/assets/css/PlayingDashboard.css */
+/* .player {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+}
+
+.player-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
