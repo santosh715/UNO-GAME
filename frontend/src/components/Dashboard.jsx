@@ -1,4 +1,3 @@
-// src/components/Dashboard.jsx
 import React, { useContext } from 'react';
 import { GameContext } from '../context/GameContext';
 import './assets/css/Dashboard.css';
@@ -23,7 +22,7 @@ export const Dashboard = () => {
                     </div>
                 </div>
             </div>
-            <div className="container bg-info" align="center">
+            <div className="col-sm-12 container bg-info" align="center">
                 <div className="col-md-12">
                     <br />
                     <Players players={players} />

@@ -1,3 +1,4 @@
+/* Main container styling */
 .main-div-1 {
   background-image: url('../images/Landing-Page.gif');
   background-size: cover;
@@ -10,13 +11,15 @@
   align-items: center;
 }
 
+/* Inner container styling */
 .main-div-2 {
   width: 80%;
-  height: 80%;
+  height: 90vh;
   padding: 10px;
+  margin-bottom: 30px;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-evenly;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -25,6 +28,7 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+/* Flip card styling */
 .flip-card {
   background-color: transparent;
   width: 300px;
@@ -65,6 +69,7 @@
   transform: rotateY(180deg);
 }
 
+/* Flexbox container for cards */
 .card-wrap {
   text-align: center;
   display: flex;
@@ -110,30 +115,45 @@
   width: 200px;
 }
 
-/* Ensure no hover effects interfere */
-.flip-card:hover .flip-card-inner {
-  /* This line should remain commented */
-}
-
+/* Media queries for responsive design */
 @media (max-width: 768px) {
   .main-div-2 {
     flex-direction: column;
     align-items: center;
+    height: 200%;
   }
 
   .flip-card {
-    width: 300px;
-    height: 300px;
+    width: 100%;
+    height: 100%;
   }
+  
 
   .card-wrap {
     flex-direction: column;
     align-items: center;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  .my-div {
+  .my-div, .host-avatar-div, .avatar-popup, .label, .first-btn {
     width: 100%;
-    padding: 10px;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .avatar-options img {
+    margin: 5px;
+    cursor: pointer;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .selected-avatar {
+    margin-top: 10px;
+    max-width: 100px;
+    height: auto;
   }
 
   .code-input[type="text"] {
@@ -158,15 +178,72 @@ img {
   height: 60px;
   width: 60px;
 }
-.selected-avatar{
+
+.selected-avatar {
   height: 60px;
   width: 60px;
-
-}
-/* .join-player-avatar-div{
-  height: 15vh;
 }
 
-.host-avatar-div{
-  height: 15vh;
-} */
+/* Flip card back styling */
+.flip-card-back {
+  background: rgba(222, 36, 34, 0.34);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5.2px);
+  -webkit-backdrop-filter: blur(5.2px);
+  border: 1px solid rgba(222, 36, 34, 0.33);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 800px;
+  overflow: visible;
+}
+
+@media (max-width: 600px) {
+  .flip-card-back {
+    flex-direction: column;
+  }
+
+  .card-wrap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .my-div, .host-avatar-div, .avatar-popup, .label, .first-btn {
+    width: 100%;
+  }
+
+  .avatar-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .avatar-options img {
+    max-width: 30%;
+    margin: 5px;
+  }
+
+  .selected-avatar {
+    max-width: 50px;
+  }
+}
+
+.close-btn {
+  position: absolute;
+  top: -20px;
+  right: 0px;
+  left: 145px;
+  color: black;
+  background: none;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.avatar-popup {
+  /* width: 90vh; */
+}
